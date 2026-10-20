@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16
+    container_name: cimse-db
+    environment:
+      POSTGRES_DB: cimse
+      POSTGRES_USER: cimse_user
+      POSTGRES_PASSWORD: cimse_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cimse_user -d cimse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: cimse-backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/cimse
+      DB_USER: cimse_user
+      DB_PASS: cimse_pass
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: cimse-frontend
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
