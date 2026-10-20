@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://cimse-db:5432/cimse}
+    username: ${DB_USER:cimse_user}
+    password: ${DB_PASS:cimse_pass}
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: none        # el esquema lo crea database/schema.sql
+    open-in-view: false
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

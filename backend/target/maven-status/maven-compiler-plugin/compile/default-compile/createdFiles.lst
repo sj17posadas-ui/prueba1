@@ -1,0 +1,6 @@
+com\cimse\sistema\TablasController.class
+com\cimse\comercial\Cliente.class
+com\cimse\comercial\ClienteController.class
+com\cimse\comercial\ClienteRepository.class
+com\cimse\config\CorsConfig.class
+com\cimse\CimseApplication.class
